@@ -1,6 +1,6 @@
 {
   description = "Flufsor's NixOS config";
-  
+
   outputs =
     {
       self,
@@ -87,9 +87,11 @@
 
       # NixOS modules -> ./modules
       nixosModules = import ./modules { inherit inputs; };
+      nixosProfiles = import ./profiles { inherit inputs; };
 
       rekeyConfig = {
-        masterIdentities = [ "${self}/secrets/mephisto.pub" ];
+        masterIdentities = [ "/home/flufsor/.ssh/id_ed25519" ];
+        extraEncryptionPubkeys = [ (builtins.readFile "${self}/secrets/flufsor.pub") ];
       };
 
       agenix-rekey = agenix-rekey.configure {
@@ -100,17 +102,11 @@
       formatter = forAllSystems (pkgs: pkgs.nixfmt);
     };
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    stable.url = "github:NixOS/nixpkgs/nixos-24.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    stable.url = "github:NixOS/nixpkgs/nixos-25.11";
 
     nix-index-db = {
       url = "github:nix-community/nix-index-database";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    home-manager = {
-      # still used for toHyprconf function
-      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

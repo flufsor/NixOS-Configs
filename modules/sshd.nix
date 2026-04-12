@@ -1,7 +1,4 @@
-{
-  lib,
-  ...
-}:
+{ lib, ... }:
 {
   services.openssh = {
     # enable OpenSSH daemon
@@ -21,9 +18,9 @@
       KbdInteractiveAuthentication = false;
       # only use strong ciphers
       Ciphers = [
-         "chacha20-poly1305@openssh.com"
-         "aes256-gcm@openssh.com"
-         "aes128-gcm@openssh.com"
+        "chacha20-poly1305@openssh.com"
+        "aes256-gcm@openssh.com"
+        "aes128-gcm@openssh.com"
       ];
       # only use post-quantum key exchange algorithms
       KexAlgorithms = [

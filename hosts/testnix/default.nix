@@ -1,41 +1,28 @@
 {
   self,
-  config,
   lib,
-  pkgs,
-  inputs,
-  modulesPath,
   ...
 }:
+let
+  m = self.nixosModules;
+  p = self.nixosProfiles;
+in
 {
-  imports = with self.nixosModules; [
-    (modulesPath + "/installer/scan/not-detected.nix")
-    (modulesPath + "/profiles/qemu-guest.nix")
-    inputs.disko.nixosModules.disko
+  imports = [
     ./disko.nix
-    server
-    sshd
-    users
-    nix
+    p.proxmox_vm
+    m.server
+    m.sshd
+    m.users
+    m.nix
+    m.wireguard
   ];
+
+  nixpkgs.hostPlatform = "x86_64-linux";
 
   users.flufsor = {
     createUser = true;
     nixTrusted = true;
-  };
-
-  boot = {
-    growPartition = true;
-    initrd.availableKernelModules = [
-        "virtio_pci"
-        "virtio_net"
-        "virtio_scsi"
-        "virtio_blk"
-    ];
-    loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
-    };
   };
 
   swapDevices = [
@@ -45,47 +32,38 @@
     }
   ];
 
-  nixpkgs.hostPlatform = "x86_64-linux";
+  networking.nameservers = [ "10.0.120.1" ];
 
-  networking.useNetworkd = true;
-
-  systemd = {
-    network = {
-      networks = {
-        "20-eth" = {
-          matchConfig.MACAddress = "bc:24:11:db:2e:d9";
-          address = [
-            "10.0.120.60/24"
-            "2a02:a03f:850a:c001:554a:e89b:dc34:8127/64"
-          ];
-          routes = [
-            { Gateway = "10.0.120.1"; }
-            { Gateway = "fe80::aa9c:6cff:fe8e:2495"; GatewayOnLink = true; }
-          ];
-          networkConfig = {
-            IPv6AcceptRA = false;
-            IPv6PrivacyExtensions = false;
-          };
-        };
-      };
-    };
-    services = {
-      systemd-growfs-root = {
-        enable = true;
-      };
+  systemd.network.networks."20-eth" = {
+    matchConfig.MACAddress = "bc:24:11:db:2e:d9";
+    address = [
+      "10.0.120.60/24"
+      "2a02:a03f:850a:c001:554a:e89b:dc34:8127/64"
+    ];
+    routes = [
+      { Gateway = "10.0.120.1"; }
+      {
+        Gateway = "fe80::aa9c:6cff:fe8e:2495";
+        GatewayOnLink = true;
+      }
+    ];
+    networkConfig = {
+      IPv6AcceptRA = false;
+      IPv6PrivacyExtensions = false;
     };
   };
 
-  services = {
-    resolved = {
-      enable = true;
-      settings.Resolve = {
-        DNS = [
-          "10.0.120.1"
-        ];
-      };
-    };
-    qemuGuest.enable = true;
+  wireguard.wg0 = {
+    address = [ "10.100.0.1/24" ];
+    listenPort = 51820;
+    # peers = [
+    #   {
+    #     publicKey = "<peer-public-key>";
+    #     endpoint = "<peer-ip>:51820";
+    #     allowedIPs = [ "10.100.0.2/32" ];
+    #     persistentKeepalive = 25;
+    #   }
+    # ];
   };
 
   # https://wiki.nixos.org/wiki/FAQ/When_do_I_update_stateVersion

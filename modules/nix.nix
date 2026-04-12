@@ -1,12 +1,6 @@
+{ inputs, pkgs, ... }:
 {
-  inputs,
-  pkgs,
-  ...
-}:
-{
-  imports = [
-    inputs.nix-index-db.nixosModules.nix-index
-  ];
+  imports = [ inputs.nix-index-db.nixosModules.nix-index ];
   config = {
     nix = {
       # see https://docs.lix.systems/manual/lix/stable/command-ref/conf-file.html for a list of options

@@ -72,20 +72,18 @@
   services = {
     resolved = {
       enable = true;
-      settings.Resolve = {
-        Domains = [ "~." ];
-        FallbackDNS = [
-          "1.1.1.1#cloudflare-dns.com"
-          "8.8.8.8#dns.google"
-          "1.0.0.1#cloudflare-dns.com"
-          "8.8.4.4#dns.google"
-          "2606:4700:4700::1111#cloudflare-dns.com"
-          "2001:4860:4860::8888#dns.google"
-          "2606:4700:4700::1001#cloudflare-dns.com"
-          "2001:4860:4860::8844#dns.google"
-        ];
-        LLMNR = "false"; # link-local multicast name resolution (RFC 4795)
-      };
+      domains = [ "~." ];
+      fallbackDns = [
+        "1.1.1.1#cloudflare-dns.com"
+        "8.8.8.8#dns.google"
+        "1.0.0.1#cloudflare-dns.com"
+        "8.8.4.4#dns.google"
+        "2606:4700:4700::1111#cloudflare-dns.com"
+        "2001:4860:4860::8888#dns.google"
+        "2606:4700:4700::1001#cloudflare-dns.com"
+        "2001:4860:4860::8844#dns.google"
+      ];
+      llmnr = "false";
     };
     # network time protocol
     ntpd-rs.enable = true;
@@ -104,12 +102,16 @@
       gnupg
       ripgrep
       dig
-      strace
       psmisc
       tree
       file
       which
       btop
     ];
+  };
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 7d";
   };
 }

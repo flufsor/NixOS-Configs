@@ -1,12 +1,6 @@
+{ self, pkgs, ... }:
 {
-  self,
-  pkgs,
-  ...
-}:
-{
-  imports = [
-    self.nixosModules.base
-  ];
+  imports = [ self.nixosModules.base ];
   # not needed on servers
   # https://nixos.org/manual/nixpkgs/stable/#chap-multiple-output
   documentation = {
@@ -29,6 +23,5 @@
     ''
       stty werase '^H'
     '';
-  environment.systemPackages = with pkgs; [
-  ];
+  environment.systemPackages = with pkgs; [ ];
 }

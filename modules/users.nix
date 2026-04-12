@@ -1,8 +1,4 @@
-{
-  lib,
-  config,
-  ...
-}:
+{ lib, config, ... }:
 {
   options.users = lib.attrsets.genAttrs [ "flufsor" ] (user: {
     createUser = lib.options.mkOption {
