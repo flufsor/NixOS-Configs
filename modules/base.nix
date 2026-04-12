@@ -56,7 +56,7 @@
     };
   };
   networking = {
-    useNetworkd = false;
+    useNetworkd = true;
     useDHCP = false;
     dhcpcd.enable = false;
     resolvconf.enable = false;

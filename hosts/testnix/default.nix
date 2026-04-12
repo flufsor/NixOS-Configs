@@ -47,6 +47,8 @@
 
   nixpkgs.hostPlatform = "x86_64-linux";
 
+  networking.useNetworkd = true;
+
   systemd = {
     network = {
       networks = {
@@ -58,7 +60,7 @@
           ];
           routes = [
             { Gateway = "10.0.120.1"; }
-            { Gateway = "fe80::1"; }
+            { Gateway = "fe80::aa9c:6cff:fe8e:2495"; GatewayOnLink = true; }
           ];
           networkConfig = {
             IPv6AcceptRA = false;
