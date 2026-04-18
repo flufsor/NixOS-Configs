@@ -38,7 +38,7 @@ in
     matchConfig.MACAddress = "bc:24:11:db:2e:d9";
     address = [
       "10.0.120.60/24"
-      "2a02:a03f:850a:c001:554a:e89b:dc34:8127/64"
+      "2a02:a03f:84fa:f302:554a:e89b:dc34:8127/64"
     ];
     routes = [
       { Gateway = "10.0.120.1"; }
